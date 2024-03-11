@@ -1,8 +1,7 @@
 import { faker } from "@faker-js/faker";
 import fs from "fs";
 
-let users = generateFakeData();
-// saveData(users);
+let users = readDataSync();
 
 interface User {
   id: string;
@@ -10,22 +9,9 @@ interface User {
   email: string;
 }
 
-function readData(): User[] {
-  let users: User[] = [];
-  fs.readFile("users.csv", "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading data:", err);
-    } else {
-      const lines = data.split("\n");
-      users = lines.map((line) => {
-        const [id, username, email] = line.split(",");
-        return { id, username, email };
-      });
-      console.log("Data read successfully!");
-      console.log(users);
-    }
-  });
-  return users;
+function find(id: string) {
+  users.indexOf;
+  return users.find((user) => user.id === id) !== null;
 }
 
 export function getUsers() {
@@ -39,7 +25,31 @@ export function getUser(id: string) {
 export function addUser(user: User) {
   user.id = faker.string.uuid();
   users.push(user);
-  //   saveData(users);
+  saveData(users);
+}
+
+export function updateUser(updatedUser: User) {
+  if (!updatedUser.id) return { success: false };
+  users = users.map((u) => (u.id === updatedUser.id ? updatedUser : u));
+  saveData(users);
+  return { success: true };
+}
+
+function readDataSync(): User[] {
+  let users: User[] = [];
+  try {
+    const data = fs.readFileSync("users.csv", "utf8");
+    const lines = data.split("\n");
+    users = lines.map((line) => {
+      const [id, username, email] = line.split(",");
+      return { id, username, email };
+    });
+    console.log("Data read successfully!");
+    console.log(users);
+  } catch (err) {
+    console.error("Error reading data:", err);
+  }
+  return users;
 }
 
 function saveData(users: User[]) {
