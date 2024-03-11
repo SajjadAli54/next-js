@@ -1,6 +1,7 @@
 // Route Handler to handle HTTP Requests
 import { NextRequest, NextResponse } from "next/server";
 import { getUsers, addUser } from "./services/users-service";
+import schema from "./schema";
 
 export function GET(request: NextRequest) {
   const users = getUsers();
@@ -9,11 +10,9 @@ export function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const user = await request.json();
-  if (!user["username" || !user["email"]])
-    return NextResponse.json(
-      { error: "Name and Email both are required" },
-      { status: 400 }
-    );
+  const validationResult = schema.safeParse(user);
+  if (!validationResult.success)
+    return NextResponse.json(validationResult.error.errors);
   addUser(user);
   return NextResponse.json(user, { status: 201 });
 }

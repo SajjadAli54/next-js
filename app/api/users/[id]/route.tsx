@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteUser, getUser, updateUser } from "../services/users-service";
+import schema from "../schema";
 
 interface Props {
   params: {
@@ -16,6 +17,8 @@ export function GET(request: NextRequest, { params: { id } }: Props) {
 
 export async function PUT(request: NextRequest, { params: { id } }: Props) {
   const user = await request.json();
+  const validatin = schema.safeParse(user);
+  if (!validatin.success) return NextResponse.json(validatin.error.errors);
   user.id = id;
   const res = updateUser(user);
   if (res?.success) return NextResponse.json(user, { status: 200 });
