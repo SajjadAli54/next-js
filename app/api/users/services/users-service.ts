@@ -4,11 +4,6 @@ import { readDataSync, saveData } from "./file-service";
 
 let users = readDataSync();
 
-function find(id: string) {
-  users.indexOf;
-  return users.find((user) => user.id === id) !== null;
-}
-
 export function getUsers() {
   return users;
 }
@@ -28,4 +23,15 @@ export function updateUser(updatedUser: User) {
   users = users.map((u) => (u.id === updatedUser.id ? updatedUser : u));
   saveData(users);
   return { success: true };
+}
+
+export function deleteUser(id: string) {
+  const user = getUser(id);
+  if (!user) return { success: false };
+  users = users.filter((user) => user.id !== id);
+  saveData(users);
+  return {
+    success: true,
+    obj: user,
+  };
 }

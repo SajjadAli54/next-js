@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUser, updateUser } from "../services/users-service";
+import { deleteUser, getUser, updateUser } from "../services/users-service";
 
 interface Props {
   params: {
@@ -20,4 +20,11 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
   const res = updateUser(user);
   if (res?.success) return NextResponse.json(user, { status: 200 });
   NextResponse.json({ error: "User not found" }, { status: 404 });
+}
+
+export function DELETE(request: NextRequest, { params: { id } }: Props) {
+  const response = deleteUser(id);
+  if (response?.success)
+    return NextResponse.json(response?.obj, { status: 200 });
+  return NextResponse.json({ error: "User Not Fund" }, { status: 404 });
 }
