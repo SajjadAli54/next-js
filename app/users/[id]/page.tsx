@@ -5,7 +5,7 @@ interface Props {
 }
 
 const UserDetailsPage = ({ params: { id } }: Props) => {
-  return <div>UserDetails {id}</div>;
+  return <h1>UserDetails {id}</h1>;
 };
 
 export default UserDetailsPage;

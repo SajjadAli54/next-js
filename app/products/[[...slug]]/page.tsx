@@ -10,9 +10,9 @@ const ProductsPage = ({
   searchParams: { sortOrder },
 }: Props) => {
   return (
-    <div>
+    <h1>
       Product Page {slug} {sortOrder}
-    </div>
+    </h1>
   );
 };
 
