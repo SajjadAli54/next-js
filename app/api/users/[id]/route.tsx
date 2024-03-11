@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUser, updateUser } from "../users-service";
+import { getUser, updateUser } from "../services/users-service";
 
 interface Props {
   params: {

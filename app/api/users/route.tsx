@@ -1,6 +1,6 @@
 // Route Handler to handle HTTP Requests
 import { NextRequest, NextResponse } from "next/server";
-import { getUsers, addUser } from "./users-service";
+import { getUsers, addUser } from "./services/users-service";
 
 export function GET(request: NextRequest) {
   const users = getUsers();
