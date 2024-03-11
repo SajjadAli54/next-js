@@ -24,7 +24,11 @@ const NavBar = () => {
   return (
     <div className="flex justify-between bg-slate-200 p-5">
       {routes.map((route) => (
-        <Link className="hover:bg-slate-400" href={route["link"]}>
+        <Link
+          key={route["link"]}
+          className="hover:bg-slate-400"
+          href={route["link"]}
+        >
           {route["name"]}
         </Link>
       ))}
