@@ -1,4 +1,4 @@
-import React, { use } from "react";
+import React, { Suspense, use } from "react";
 import UserTable from "./UserTable";
 import Link from "next/link";
 
