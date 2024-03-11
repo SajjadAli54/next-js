@@ -1,33 +1,29 @@
 import Link from "next/link";
 import React, { use } from "react";
 import { sort } from "fast-sort";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+import User from "../api/users/user-type";
+import { getUsers } from "../api/users/services/users-service";
 
 interface Props {
   sortOrder: string;
 }
 
 const UserTable = async ({ sortOrder }: Props) => {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users", {
-    next: { revalidate: 10 },
-  });
-  let users: User[] = await response.json();
+  let users: User[] = getUsers();
   const sortedUsers = sort(users).asc(
-    sortOrder == "email" ? (user) => user.email : (user) => user.name
+    sortOrder == "email" ? (user) => user.email : (user) => user.username
   );
 
   return (
     <div>
-      <table className="table table-bordered">
+      <table className="table table-bordered m-4">
         <thead>
           <tr>
             <th>
-              <Link href="/users?sortOrder=name">Name</Link>
+              <Link href="/users?sortOrder=name">Id</Link>
+            </th>
+            <th>
+              <Link href="/users?sortOrder=name">Username</Link>
             </th>
             <th>
               <Link href="/users?sortOrder=email">Email</Link>
@@ -37,7 +33,8 @@ const UserTable = async ({ sortOrder }: Props) => {
         <tbody>
           {sortedUsers.map((user) => (
             <tr className="hover" key={user.id}>
-              <td>{user.name}</td>
+              <td>{user.id}</td>
+              <td>{user.username}</td>
               <td>{user.email}</td>
             </tr>
           ))}
