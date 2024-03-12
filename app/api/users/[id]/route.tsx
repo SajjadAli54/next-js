@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import schema from "../schema";
 
 import prisma from "@/prisma/migrations/client";
-import { parse } from "path";
 
 interface Props {
   params: {
@@ -39,9 +38,13 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
   return NextResponse.json(updatedUser, { status: 200 });
 }
 
-export function DELETE(request: NextRequest, { params: { id } }: Props) {
-  // const response = deleteUser(id);
-  const response = prisma.user.delete({ where: { id: parseInt(id) } });
-  if (response) return NextResponse.json(response, { status: 200 });
-  return NextResponse.json({ error: "User Not Fund" }, { status: 404 });
+export async function DELETE(request: NextRequest, { params: { id } }: Props) {
+  const existingUser = await prisma.user.findUnique({
+    where: { id: parseInt(id) },
+  });
+  if (!existingUser)
+    return NextResponse.json({ error: "User Not Found" }, { status: 404 });
+
+  const response = await prisma.user.delete({ where: { id: parseInt(id) } });
+  return NextResponse.json(response, { status: 200 });
 }
