@@ -10,9 +10,27 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const user = await request.json();
-  const validationResult = schema.safeParse(user);
+  const body = await request.json();
+  const validationResult = schema.safeParse(body);
   if (!validationResult.success)
     return NextResponse.json(validationResult.error.errors);
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: body.email,
+    },
+  });
+  if (existingUser)
+    return NextResponse.json(
+      { error: "User with this email already exists" },
+      { status: 400 }
+    );
+
+  const user = await prisma.user.create({
+    data: {
+      name: body.name,
+      email: body.email,
+    },
+  });
   return NextResponse.json(user, { status: 201 });
 }
