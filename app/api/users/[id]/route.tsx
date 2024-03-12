@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import schema from "../schema";
 
 import prisma from "@/prisma/migrations/client";
+import { parse } from "path";
 
 interface Props {
   params: {
@@ -17,17 +18,25 @@ export async function GET(request: NextRequest, { params: { id } }: Props) {
 }
 
 export async function PUT(request: NextRequest, { params: { id } }: Props) {
-  const user = await request.json();
-  const validatin = schema.safeParse(user);
+  const body = await request.json();
+  const validatin = schema.safeParse(body);
   if (!validatin.success) return NextResponse.json(validatin.error.errors);
-  user.id = id;
-  // const res = updateUser(user);
-  const res = await prisma.user.update({
-    where: { id: user.id },
-    data: user,
+
+  const existingUser = await prisma.user.findUnique({
+    where: { id: parseInt(id) },
   });
-  if (res) return NextResponse.json(user, { status: 200 });
-  NextResponse.json({ error: "User not found" }, { status: 404 });
+
+  if (!existingUser)
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+
+  const updatedUser = await prisma.user.update({
+    where: { id: parseInt(id) },
+    data: {
+      name: body.name,
+      email: body.email,
+    },
+  });
+  return NextResponse.json(updatedUser, { status: 200 });
 }
 
 export function DELETE(request: NextRequest, { params: { id } }: Props) {
