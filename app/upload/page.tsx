@@ -16,6 +16,10 @@ const UploadPage = () => {
       )}
       <CldUploadWidget
         uploadPreset="uvageujl"
+        options={{
+          sources: ["local", "url", "camera", "image_search"],
+          multiple: false,
+        }}
         onUpload={(result, widget) => {
           if (result.event !== "success") return;
           const info = result.info as CloudinaryResult;
