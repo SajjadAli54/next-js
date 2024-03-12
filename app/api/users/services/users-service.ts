@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import User from "../user-type";
 import { readDataSync, saveData } from "./file-service";
 
-let users = readDataSync();
+let users: User[] = [];
 
 export function getUsers() {
   return users;
